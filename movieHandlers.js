@@ -1,3 +1,7 @@
+/* eslint-disable brace-style */
+/* eslint-disable no-unused-vars */
+/* eslint-disable radix */
+/* eslint-disable no-lone-blocks */
 /* eslint-disable no-shadow */
 const movies = [
   {
@@ -127,6 +131,91 @@ const postUsers = (req, res) => {
     });
 };
 
+const putMovies = (req, res) => {
+  // eslint-disable-next-line radix
+  const id = parseInt(req.params.id);
+  const {
+    title, director, year, color, duration,
+  } = req.body;
+
+  database
+    .query(
+      'update movies set title = ?, director = ?, year = ?, color = ?, duration = ? where id = ?',
+      [title, director, year, color, duration, id],
+    )
+    .then(([movieUpdate]) => {
+      {
+        if (movieUpdate.affectedRows === 0) {
+          res.status(404).send('Not Found');
+        } else {
+          res.sendStatus(204);
+        }
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error editing movie');
+    });
+};
+
+const putUsers = (req, res) => {
+  const id = parseInt(req.params.id);
+  const {
+    firstname, lastname, email, city, language,
+  } = req.body;
+
+  database
+    .query(
+      'update users set firstname = ?, lastname = ?, email = ?, city = ?, language = ? where id = ?',
+      [firstname, lastname, email, city, language, id],
+    )
+    .then(([userUpdate]) => {
+      {
+        if (userUpdate.affectedRows === 0) {
+          res.status(404).send('Not Found');
+        } else {
+          res.sendStatus(204);
+        }
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error editing user');
+    });
+};
+
+const deleteMovies = (req, res) => {
+  const id = parseInt(req.params.id);
+
+  database
+    .query('delete from movies where id = ?', [id])
+    .then(([movieToDelete]) =>
+    { if (movieToDelete.affectedRows === 0) {
+      res.status(404).send('Not Found');
+    } else {
+      res.sensStatus(204);
+    } })
+    .catch((err) =>
+    { console.error(err);
+      res.status(500).send('Error deleting data from database'); });
+};
+
+const deleteUsers = (req, res) => {
+  const id = parseInt(req.params.id);
+
+  database
+    .query('delete from users where id = ?', [id])
+    .then(([userToDelete]) =>
+    { if (userToDelete.affectedRows === 0) {
+      res.status(404).send('Not Found');
+    } else {
+      res.sensStatus(204);
+    } })
+    .catch((err) =>
+    { console.error(err);
+      res.status(500).send('Error deleting data from database'); });
+};
+
 module.exports = {
   getMovies,
   getMovieById,
@@ -134,6 +223,9 @@ module.exports = {
   getUserById,
   postMovie,
   postUsers,
+  putUsers,
+  putMovies,
+  deleteMovies,
 };
 
 // CORRECTION :
