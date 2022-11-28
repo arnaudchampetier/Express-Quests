@@ -86,12 +86,23 @@ const getUsers = (req, res) => {
 
       value: req.query.city,
 
-      operator: '<=',
+      operator: '=',
 
     });
   }
   database
-    .query('select * from users')
+    .query(
+      where.reduce(
+
+        (sql, { column, operator }, index) => `${sql} ${index === 0 ? 'where' : 'and'} ${column} ${operator} ?`,
+
+        initialSql,
+
+      ),
+
+      where.map(({ value }) => value),
+
+    )
     .then(([users]) => {
       res.json(users);
     })
@@ -253,6 +264,7 @@ module.exports = {
   putUsers,
   putMovies,
   deleteMovies,
+  deleteUsers,
 };
 
 // CORRECTION :
