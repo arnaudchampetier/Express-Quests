@@ -63,7 +63,7 @@ const getMovieById = (req, res) => {
 };
 
 const getUsers = (req, res) => {
-  const initialSql = 'select * from users';
+  const initialSql = 'select firstname, lastname, email, city from users';
 
   const where = [];
 
@@ -117,7 +117,7 @@ const getUserById = (req, res) => {
   const id = parseInt(req.params.id);
 
   database
-    .query('select * from users where id = ?', [id])
+    .query('select firstname, lastname, email, city from users where id = ?', [id])
     .then(([users]) => {
       if (users[0] != null) {
         res.json(users[0]);
@@ -152,13 +152,13 @@ const postMovie = (req, res) => {
 
 const postUsers = (req, res) => {
   const {
-    firstname, lastname, email, city, language,
+    firstname, lastname, email, city, language, hashedPassword
   } = req.body;
 
   database
     .query(
-      'INSERT INTO users(firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)',
-      [firstname, lastname, email, city, language],
+      'INSERT INTO users(firstname, lastname, email, city, language, hashedPassword) VALUES (?, ?, ?, ?, ?,?)',
+      [firstname, lastname, email, city, language, hashedPassword],
     )
     .then(([result]) => {
       res.location(`/api/users/${result.insertId}`).sendStatus(201);

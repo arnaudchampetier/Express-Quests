@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/WildCodeSchool/Express-Quests#readme",
   "dependencies": {
+    "2": "^3.0.0",
+    "argon": "^2.0.21",
     "dotenv": "^16.0.3",
     "express": "^4.18.1",
     "joi": "^17.7.0",

@@ -2,6 +2,8 @@ require('dotenv').config();
 
 const express = require('express');
 
+const { hashPassword } = require("./auth.js");
+
 const app = express();
 
 app.use(express.json());
@@ -11,6 +13,8 @@ const port = process.env.APP_PORT ?? 5006;
 const welcome = (req, res) => {
   res.send('Welcome to my favourite movie list');
 };
+
+
 
 app.get('/', welcome);
 
@@ -22,12 +26,15 @@ app.get('/api/movies/:id', movieHandlers.getMovieById);
 app.get('/api/users', movieHandlers.getUsers);
 app.get('/api/users/:id', movieHandlers.getUserById);
 app.post('/api/movies', movieHandlers.postMovie);
-app.post('/api/users', movieHandlers.postUsers);
+
+app.post('/api/users', hashPassword, movieHandlers.postUsers);
 app.put('/api/movies/:id', movieHandlers.putMovies);
 app.put('/api/users/:id', movieHandlers.putUsers);
 
 app.delete('/api/movies/:id', movieHandlers.deleteMovies);
 app.delete('/api/users/:id', movieHandlers.deleteUsers);
+
+
 
 app.listen(port, (err) => {
   if (err) {
@@ -36,3 +43,7 @@ app.listen(port, (err) => {
     console.log(`Server is listening on ${port}`);
   }
 });
+
+
+
+
